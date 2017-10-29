@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
@@ -127,24 +128,39 @@ public class Main {
     private void render() {
         while (!Display.isCloseRequested()) {
             try {
+                if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                    System.exit(0);
+                }
+                
+                //randomize colors and distort polygons if user holds spacebar
+                if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+                    for (int i = 0; i < polygons.size(); i++) {
+                        Polygon polygon = (Polygon) polygons.get(i);
+                        polygon.color[0] += (Math.random() - .5) * .2;
+                        polygon.color[1] += (Math.random() - .5) * .2;
+                        polygon.color[2] += (Math.random() - .5) * .2;
+                        
+                        ArrayList vertices = polygon.vertices;
+                        for (int j = 0; j < vertices.size(); j++) {
+                            float[] vertex = (float[]) vertices.get(j);
+                            vertex[0] += (Math.random() - .5) * 5;
+                            vertex[1] += (Math.random() - .5) * 5;
+                        }
+                    }
+                }
+                
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 glLoadIdentity();
                 
                 glColor3f(1.0f, 1.0f, 0.0f);
                 glPointSize(1);
                 
-                drawPolygon((Polygon) polygons.get(0));
+                for (int i = 0; i < polygons.size(); i++) {
+                    drawPolygon((Polygon) polygons.get(i));
+                }
                 
-//                for (int i = 0; i < polygons.size(); i++) {
-//                    Polygon temp = (Polygon) polygons.get(i);
-//                    glColor3f(temp.color[0], temp.color[1], temp.color[2]);
-//                    glBegin(GL_POLYGON);
-//                        for (int j = 0; j < temp.vertices.size(); j++) {
-//                            float[] vertex = (float[]) temp.vertices.get(j);
-//                            glVertex2f(vertex[0], vertex[1]);
-//                        }
-//                    glEnd();
-//                }
+                
+                
                 
                 Display.update();
                 Display.sync(60);
@@ -174,9 +190,10 @@ public class Main {
         ArrayList<float[]> all_edges = new ArrayList();
         ArrayList<float[]> global_edges = new ArrayList();
         ArrayList<float[]> active_edges = new ArrayList();
-        boolean parity = false;
+        boolean parity;
         int scanline = 0;
         
+        glColor3f(polygon.color[0], polygon.color[1], polygon.color[2]);
         
         //populate all_edges list
         for (int i = 0; i < vertices.size(); i++) {
@@ -277,8 +294,8 @@ public class Main {
             Collections.sort(active_edges, new Comparator<float[]>() {
             @Override
             public int compare(float[] edge1, float[] edge2) {
-                if (edge1[0] < edge2[0]) return -1;
-                if (edge1[0] > edge2[0]) return 1;
+                //if (edge1[0] < edge2[0]) return -1;
+                //if (edge1[0] > edge2[0]) return 1;
 
                 //y-min is equal
                 if (edge1[2] < edge2[2]) return -1;
@@ -293,13 +310,7 @@ public class Main {
             }
         });
             
-        } while (!active_edges.isEmpty());
-        
-
-        
-        System.out.println(active_edges);
-        
-        
+        } while (!active_edges.isEmpty());        
     }
 }
 
