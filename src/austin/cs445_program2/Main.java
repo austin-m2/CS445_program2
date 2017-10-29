@@ -174,6 +174,8 @@ public class Main {
         ArrayList<float[]> all_edges = new ArrayList();
         ArrayList<float[]> global_edges = new ArrayList();
         ArrayList<float[]> active_edges = new ArrayList();
+        boolean parity = false;
+        int scanline = 0;
         
         
         //populate all_edges list
@@ -202,7 +204,7 @@ public class Main {
             global_edges.add(edge);
         }
         
-
+        //sorts by increasing y-min and x-val
         Collections.sort(global_edges, new Comparator<float[]>() {
             @Override
             public int compare(float[] edge1, float[] edge2) {
@@ -221,7 +223,81 @@ public class Main {
                 return 0;
             }
         });
+        
+        //set scanline equal to lowest y-min
+        scanline = (int) Math.floor(global_edges.get(0)[0]);
+        
+        //draw loop
+        do {
+            parity = false;
+            
+            //draw pixels
+            int nextEdge = 0;
+            for (int x = -320; x < 320; x++) {
+                if ((nextEdge <= active_edges.size() - 1) && (x >= active_edges.get(nextEdge)[2])) {
+                    nextEdge += 1;
+                    parity = !parity;
+                }
+                if (parity) {
+                    glBegin(GL_POINTS);
+                        glVertex2f(x, scanline);
+                    glEnd();
+                }
+            }
+            
+            scanline += 1;
+            
+            //remove edges from active edge table if necessary
+            for (int i = 0; i < active_edges.size(); i++) {
+                float[] edge = active_edges.get(i);
+                if (edge[1] <= scanline) {
+                    active_edges.remove(i);
+                    i -= 1;
+                }
+            }
 
+            //update x value by 1/m
+            for (int i = 0; i < active_edges.size(); i++) {
+                float[] edge = active_edges.get(i);
+                edge[2] += edge[3];
+            }
+            
+            //move edges with y-min <= scanline to active_edges
+            int size = global_edges.size();
+            for (int i = 0; i < size; i++) {
+                if (global_edges.get(i)[0] <= scanline) {
+                    active_edges.add(global_edges.get(i));
+                    global_edges.remove(i);
+                    size -= 1;
+                    i -= 1;
+                }
+            }
+            
+            //re-sort active edge table
+            Collections.sort(active_edges, new Comparator<float[]>() {
+            @Override
+            public int compare(float[] edge1, float[] edge2) {
+                if (edge1[0] < edge2[0]) return -1;
+                if (edge1[0] > edge2[0]) return 1;
+
+                //y-min is equal
+                if (edge1[2] < edge2[2]) return -1;
+                if (edge1[2] > edge2[2]) return 1;
+
+                //x-val is equal
+                if (edge1[1] < edge2[1]) return -1;
+                if (edge1[1] > edge2[1]) return 1;
+
+                //y-max is equal
+                return 0;
+            }
+        });
+            
+        } while (!active_edges.isEmpty());
+        
+
+        
+        System.out.println(active_edges);
         
         
     }
