@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Austin Morris
+ * CS445: Program 2
+ * Last modified: 10/28/2017
  */
 package austin.cs445_program2;
 import java.io.File;
@@ -28,6 +28,7 @@ public class Main {
         Polygon lastPolygon = null;
         float[][] tempMatrix = new float[3][3];
         
+        //parse coordinates.txt into polygon objects
         while (sc.hasNextLine()) {
             line = sc.nextLine();
             String[] chars = line.split(" ");
@@ -40,6 +41,7 @@ public class Main {
             tempMatrix[2][0] = IDENTITY_MATRIX[2][0];
             tempMatrix[2][1] = IDENTITY_MATRIX[2][1];
             tempMatrix[2][2] = IDENTITY_MATRIX[2][2];
+            
             
             switch(chars[0]) {
                 case "P":
