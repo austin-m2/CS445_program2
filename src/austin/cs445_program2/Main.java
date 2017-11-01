@@ -132,19 +132,21 @@ public class Main {
                     System.exit(0);
                 }
                 
+                
                 //randomize colors and distort polygons if user holds spacebar
                 if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
                     for (int i = 0; i < polygons.size(); i++) {
                         Polygon polygon = (Polygon) polygons.get(i);
-                        polygon.color[0] += (Math.random() - .5) * .2;
-                        polygon.color[1] += (Math.random() - .5) * .2;
-                        polygon.color[2] += (Math.random() - .5) * .2;
+                        polygon.color[0] = (float) Math.min(Math.max((polygon.color[0] + (Math.random() - .5) * .05), .3f), 1f);
+                        polygon.color[1] = (float) Math.min(Math.max((polygon.color[1] + (Math.random() - .5) * .05), .3f), 1f);
+                        polygon.color[2] = (float) Math.min(Math.max((polygon.color[2] + (Math.random() - .5) * .05), .3f), 1f);
+                        
                         
                         ArrayList vertices = polygon.vertices;
                         for (int j = 0; j < vertices.size(); j++) {
                             float[] vertex = (float[]) vertices.get(j);
-                            vertex[0] += (Math.random() - .5) * 5;
-                            vertex[1] += (Math.random() - .5) * 5;
+                            vertex[0] = (float) Math.max((vertex[0] + (Math.random() - .5) * 5), 0f);
+                            vertex[1] = (float) Math.max((vertex[1] + (Math.random() - .5) * 5), 0f);
                         }
                     }
                 }
@@ -158,9 +160,6 @@ public class Main {
                 for (int i = 0; i < polygons.size(); i++) {
                     drawPolygon((Polygon) polygons.get(i));
                 }
-                
-                
-                
                 
                 Display.update();
                 Display.sync(60);
