@@ -1,8 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/***************************************************************
+* file: Polygon.java
+* author: Austin Morris
+* class: CS 445 – Computer Graphics
+*
+* assignment: program 2
+* date last modified: 10/31/2017
+*
+* purpose: This class represents a polygon.
+*
+****************************************************************/ 
 package austin.cs445_program2;
 
 import java.util.ArrayList;

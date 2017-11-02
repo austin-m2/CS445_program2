@@ -1,15 +1,19 @@
-/*
- * Austin Morris
- * CS445: Program 2
- * Last modified: 10/28/2017
- */
+/***************************************************************
+* file: Main.java
+* author: Austin Morris
+* class: CS 445 – Computer Graphics
+*
+* assignment: program 2
+* date last modified: 10/31/2017
+*
+* purpose: This is an implementation of a simple fill algorithm
+* that works for any type of polygon.
+*
+****************************************************************/ 
 package austin.cs445_program2;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -96,7 +100,6 @@ public class Main {
     }
 
     public Main() {
-        //this.polygons = new ArrayList<Polygon>();
     }
     
     public void start() {
@@ -168,6 +171,8 @@ public class Main {
         Display.destroy();
     }
     
+    //method: multiply
+    //purpose: multiplies two 2d matrices together
     public static float[][] multiply(float[][] arg1, float[][] arg2) {
         int arg1Rows = arg1.length;
         int arg1Cols = arg1[0].length;
@@ -183,7 +188,8 @@ public class Main {
         return product;
     }
     
-    
+    //method: drawPolygon
+    //purpose: takes care of the entire process of drawing a polygon
     public static void drawPolygon(Polygon polygon) {
         ArrayList<float[]> vertices = polygon.vertices;
         ArrayList<float[]> all_edges = new ArrayList();
@@ -293,9 +299,6 @@ public class Main {
             Collections.sort(active_edges, new Comparator<float[]>() {
             @Override
             public int compare(float[] edge1, float[] edge2) {
-                //if (edge1[0] < edge2[0]) return -1;
-                //if (edge1[0] > edge2[0]) return 1;
-
                 //y-min is equal
                 if (edge1[2] < edge2[2]) return -1;
                 if (edge1[2] > edge2[2]) return 1;
